@@ -21,7 +21,7 @@ tempo = 160
 
 try:
     for k in rhythm.keys():
-        rhythm[k] *=  60 / tempo
+        rhythm[k] *= 60 / tempo
 except ZeroDivisionError:
     print("Tempo must not be zero")
     tempo = 60
@@ -63,25 +63,35 @@ pitch = {
 
 sample_rate = 44100
 
-def gen_wave(frequency, duration):
+
+def gen_wave(frequency, duration, waveform="square"):
     lookup_sample_rate = sample_rate
     t = np.linspace(0, duration, int(duration * lookup_sample_rate), False)
-    note = (np.sin(frequency * t * 8 * np.pi)) if frequency != None else np.zeros((int(duration * lookup_sample_rate),), dtype=np.int16)
+    note = (np.sin(frequency * t * 8 * np.pi)) if frequency != None else np.zeros(
+        (int(duration * lookup_sample_rate),), dtype=np.int16)
     note[-100:] = 0
-    note2 = np.array([1 if q>0 else -1 for q in note], dtype=np.float64)
-    return note2
+    square = np.array([1 if q > 0 else -1 for q in note], dtype=np.float64)
+    return square if waveform == "square" else note
 
 
-
-bars[0] = gen_wave(pitch["A3"], rhythm["1"]) + gen_wave(pitch["E3"], rhythm["1"]) + gen_wave(pitch["Cs3"], rhythm["1"]) + gen_wave(pitch["A2"] / 2, rhythm["1"])
-bars[1] = np.hstack(((gen_wave(pitch["A3"], rhythm["1/4"]) + gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["Cs3"], rhythm["1/4"]) + gen_wave(pitch["A2"] / 2, rhythm["1/4"])), (gen_wave(pitch["Ds3"], rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["Cs3"] * 2, rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["Gs3"], rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["A2"] / 2, rhythm["1/4"]))))
-bars[2] = gen_wave(pitch["C3"] * 2, rhythm["1"]) + gen_wave(pitch["G3"], rhythm["1"]) + gen_wave(pitch["E3"], rhythm["1"]) + gen_wave(pitch["C2"], rhythm["1"])
-bars[3] = np.hstack(((gen_wave(pitch["C3"] * 2, rhythm["1/4"]) + gen_wave(pitch["G3"], rhythm["1/4"]) + gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["H2"] / 2, rhythm["1/4"])), (gen_wave(pitch["E3"] * 2, rhythm["1/4"]) + gen_wave(pitch["A3"], rhythm["1/4"]) + gen_wave(pitch["Fs3"], rhythm["1/4"]) + gen_wave(pitch["D2"], rhythm["1/4"])), (gen_wave(pitch["D3"] * 2, rhythm["1/8"]) + gen_wave(pitch["D2"], rhythm["1/8"])), (gen_wave(pitch["C2"] * 2, rhythm["1/8"]) + gen_wave(pitch["D2"], rhythm["1/8"])), (gen_wave(pitch["C2"] * 2, rhythm["1/4"]) + gen_wave(pitch["E2"] / 2, rhythm["1/4"]))))
+bars[0] = gen_wave(pitch["A3"], rhythm["1"]) + gen_wave(pitch["E3"], rhythm["1"]) + \
+    gen_wave(pitch["Cs3"], rhythm["1"]) + \
+    gen_wave(pitch["A2"] / 2, rhythm["1"])
+bars[1] = np.hstack(((gen_wave(pitch["A3"], rhythm["1/4"]) + gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["Cs3"], rhythm["1/4"]) + gen_wave(pitch["A2"] / 2, rhythm["1/4"])), (gen_wave(pitch["Ds3"], rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/8"]) +
+                    gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["Cs3"] * 2, rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["Gs3"], rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["A2"] / 2, rhythm["1/4"]))))
+bars[2] = gen_wave(pitch["C3"] * 2, rhythm["1"]) + gen_wave(pitch["G3"], rhythm["1"]) + \
+    gen_wave(pitch["E3"], rhythm["1"]) + gen_wave(pitch["C2"], rhythm["1"])
+bars[3] = np.hstack(((gen_wave(pitch["C3"] * 2, rhythm["1/4"]) + gen_wave(pitch["G3"], rhythm["1/4"]) + gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["H2"] / 2, rhythm["1/4"])), (gen_wave(pitch["E3"] * 2, rhythm["1/4"]) + gen_wave(pitch["A3"], rhythm["1/4"]) + gen_wave(pitch["Fs3"], rhythm["1/4"]) +
+                    gen_wave(pitch["D2"], rhythm["1/4"])), (gen_wave(pitch["D3"] * 2, rhythm["1/8"]) + gen_wave(pitch["D2"], rhythm["1/8"])), (gen_wave(pitch["C2"] * 2, rhythm["1/8"]) + gen_wave(pitch["D2"], rhythm["1/8"])), (gen_wave(pitch["C2"] * 2, rhythm["1/4"]) + gen_wave(pitch["E2"] / 2, rhythm["1/4"]))))
 bars[4] = bars[0]
-bars[5] = np.hstack(((gen_wave(pitch["A3"], rhythm["1/4"]) + gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["Cs3"], rhythm["1/4"]) + gen_wave(pitch["A2"] / 2, rhythm["1/4"])), (gen_wave(pitch["D3"], rhythm["1/8"]) + gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/8"]) + gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["Cs3"] * 2, rhythm["1/8"]) + gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["G3"], rhythm["1/4"]) + gen_wave(None, rhythm["1/4"]))))
-bars[6] = np.hstack(((gen_wave(pitch["E2"] / 2, rhythm["1/2"]) + gen_wave(None, rhythm["1/2"])), (gen_wave(pitch["E2"], rhythm["1/2"]) + gen_wave(pitch["G2"], rhythm["1/2"]))))
-bars[7] = np.hstack(((gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["C3"], rhythm["1/4"])), (gen_wave(pitch["Eb3"], rhythm["1/4"])), (gen_wave(pitch["D3"], rhythm["1/4"])), (gen_wave(pitch["C3"], rhythm["1/4"]))))
-bars[8] = np.hstack(((gen_wave(pitch["Eb2"], rhythm["1/8"])), (gen_wave(pitch["Eb2"], rhythm["1/8"])), (gen_wave(pitch["C3"], rhythm["1/8"])), (gen_wave(pitch["D3"], rhythm["1/8"])), (gen_wave(None, rhythm["1/8"])), (gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["C2"], rhythm["1/4"]))))
+bars[5] = np.hstack(((gen_wave(pitch["A3"], rhythm["1/4"]) + gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["Cs3"], rhythm["1/4"]) + gen_wave(pitch["A2"] / 2, rhythm["1/4"])), (gen_wave(pitch["D3"], rhythm["1/8"]) + gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/8"]
+                                                                                                                                                                                                                                                                                    ) + gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["Cs3"] * 2, rhythm["1/8"]) + gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["E3"], rhythm["1/8"]) + gen_wave(pitch["E2"], rhythm["1/8"])), (gen_wave(pitch["G3"], rhythm["1/4"]) + gen_wave(None, rhythm["1/4"]))))
+bars[6] = np.hstack(((gen_wave(pitch["E2"] / 2, rhythm["1/2"]) + gen_wave(None, rhythm["1/2"])),
+                    (gen_wave(pitch["E2"], rhythm["1/2"]) + gen_wave(pitch["G2"], rhythm["1/2"]))))
+bars[7] = np.hstack(((gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["C3"], rhythm["1/4"])), (gen_wave(
+    pitch["Eb3"], rhythm["1/4"])), (gen_wave(pitch["D3"], rhythm["1/4"])), (gen_wave(pitch["C3"], rhythm["1/4"]))))
+bars[8] = np.hstack(((gen_wave(pitch["Eb2"], rhythm["1/8"])), (gen_wave(pitch["Eb2"], rhythm["1/8"])), (gen_wave(pitch["C3"], rhythm["1/8"])), (gen_wave(
+    pitch["D3"], rhythm["1/8"])), (gen_wave(None, rhythm["1/8"])), (gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["C2"], rhythm["1/4"]))))
 
 audio = np.hstack((tuple(bars)))
 
