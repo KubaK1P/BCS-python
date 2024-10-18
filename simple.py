@@ -68,7 +68,8 @@ def gen_wave(frequency, duration):
     t = np.linspace(0, duration, int(duration * lookup_sample_rate), False)
     note = (np.sin(frequency * t * 8 * np.pi)) if frequency != None else np.zeros((int(duration * lookup_sample_rate),), dtype=np.int16)
     note[-100:] = 0
-    return note   
+    note2 = np.array([1 if q>0 else -1 for q in note], dtype=np.float64)
+    return note2
 
 
 
