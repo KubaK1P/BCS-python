@@ -17,6 +17,8 @@ rhythm = {
 
 bars = [0 for i in range(9)]
 
+better_call_saul_count = 1
+
 tempo = 160
 
 try:
@@ -67,9 +69,9 @@ sample_rate = 44100
 def gen_wave(frequency, duration, waveform="square"):
     lookup_sample_rate = sample_rate
     t = np.linspace(0, duration, int(duration * lookup_sample_rate), False)
-    note = (np.sin(frequency * t * 8 * np.pi)) if frequency != None else np.zeros(
+    note = (np.sin(frequency * t * 2 * np.pi)) if frequency != None else np.zeros(
         (int(duration * lookup_sample_rate),), dtype=np.int16)
-    note[-100:] = 0
+    #note[-100:] = 0
     square = np.array([1 if q > 0 else -1 for q in note], dtype=np.float64)
     return square if waveform == "square" else note
 
@@ -93,7 +95,7 @@ bars[7] = np.hstack(((gen_wave(pitch["E3"], rhythm["1/4"]) + gen_wave(pitch["C3"
 bars[8] = np.hstack(((gen_wave(pitch["Eb2"], rhythm["1/8"])), (gen_wave(pitch["Eb2"], rhythm["1/8"])), (gen_wave(pitch["C3"], rhythm["1/8"])), (gen_wave(
     pitch["D3"], rhythm["1/8"])), (gen_wave(None, rhythm["1/8"])), (gen_wave(pitch["A2"] / 2, rhythm["1/8"])), (gen_wave(pitch["C2"], rhythm["1/4"]))))
 
-audio = np.hstack((tuple(bars)))
+audio = np.hstack(tuple(bars) * int(better_call_saul_count))
 
 # normalize to 16-bit range
 audio *= 32767 / np.max(np.abs(audio))
