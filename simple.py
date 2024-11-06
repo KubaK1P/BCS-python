@@ -17,9 +17,9 @@ rhythm = {
 
 bars = [0 for i in range(9)]
 
-better_call_saul_count = 1
+better_call_saul_count = 10
 
-tempo = 160
+tempo = 166
 
 try:
     for k in rhythm.keys():
